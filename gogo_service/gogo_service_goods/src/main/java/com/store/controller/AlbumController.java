@@ -4,6 +4,8 @@ import com.store.entity.Result;
 import com.store.entity.StatusCode;
 import com.store.pojo.Album;
 import com.store.service.AlbumService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +20,8 @@ import java.util.List;
 @RestController
 @RequestMapping("album")
 public class AlbumController {
+
+    private final  Logger logger = LoggerFactory.getLogger(AlbumController.class);
 
     @Autowired
     AlbumService albumService;
@@ -37,6 +41,15 @@ public class AlbumController {
         return new Result(true, StatusCode.OK, "查询相册所有", all);
     }
 
+    /**
+     * 功能描述: <br>
+     * 〈添加下单个相册〉
+     *
+     * @Param: [album]
+     * @return: com.store.entity.Result
+     * @Author: xiaozhang666
+     * @Date: 2020/10/28 17:08
+     */
     @RequestMapping("add")
     public Result add(@RequestBody Album album) {
         final Integer add = albumService.add(album);

@@ -6,6 +6,8 @@ import com.store.entity.Result;
 import com.store.entity.StatusCode;
 import com.store.pojo.Brand;
 import com.store.service.BrandService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,7 @@ public class BrandController {
 
     @Autowired
     BrandService brandService;
+    private final Logger logger = LoggerFactory.getLogger(BrandController.class);
 
     /**
      * 功能描述: <br>
@@ -51,6 +54,7 @@ public class BrandController {
      */
     @RequestMapping(value = "{id}", method = RequestMethod.GET)
     public Result findById(@PathVariable Integer id) {
+        logger.info("{}==================================", id);
         final Brand byId = brandService.findById(id);
         return new Result(true, StatusCode.OK, "成功", byId);
     }
@@ -156,9 +160,10 @@ public class BrandController {
      * @Author: xiaozhang666
      * @Date: 2020/10/28 16:10
      */
-    @GetMapping("cate/{cateName}")
+    @RequestMapping(value = "cate/{cateName}", method = RequestMethod.GET)
     public Result findBrandByCateName(@PathVariable String cateName) {
         List<Brand> brandList = brandService.findBrandByCateName(cateName);
         return new Result(brandList);
     }
+
 }
