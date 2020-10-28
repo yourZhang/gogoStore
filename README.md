@@ -18,3 +18,14 @@ _service	服务提供，访问db
 _service_api	暴露接口，路由地址
 
 sql	建库建表语句
+
+
+
+### 备注
+
+同步库
+
+​	码云:https://gitee.com/yourZhang/gogoStore.git
+
+​	github:https://github.com/yourZhang/gogoStore.git
+
