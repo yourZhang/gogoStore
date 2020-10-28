@@ -108,7 +108,7 @@ public class SpecServiceImpl implements SpecService {
      * @Author: guodong
      * @Date: 10:55 2020/10/28
      * @Parms [cateName]
-     * @ReturnType: com.changgou.entity.Result
+     * @ReturnType: com.store.entity.Result
      * @Description: 根据分类名称查询规格列表
      */
     @Override

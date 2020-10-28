@@ -76,7 +76,7 @@ CREATE TABLE `oauth_client_details` (
 -- ----------------------------
 -- Records of oauth_client_details
 -- ----------------------------
-INSERT INTO `oauth_client_details` VALUES ('changgou', null, '$2a$10$Q2L9IBNthsPjpJaAD4d9ae539PiovHpmDjr7D0/G7rvksV6og4PvG', 'app', 'authorization_code,password,refresh_token,client_credentials', 'http://localhost', null, '43200', '43200', null, null);
+INSERT INTO `oauth_client_details` VALUES ('store', null, '$2a$10$Q2L9IBNthsPjpJaAD4d9ae539PiovHpmDjr7D0/G7rvksV6og4PvG', 'app', 'authorization_code,password,refresh_token,client_credentials', 'http://localhost', null, '43200', '43200', null, null);
 INSERT INTO `oauth_client_details` VALUES ('userweb', null, '$2a$10$Yvkp3xzDcri6MAsPIqnzzeGBHez1QZR3A079XDdmNU4R725KrkXi2', 'app', 'password,refresh_token', 'http://localhost', null, null, null, null, null);
 
 -- ----------------------------
