@@ -15,6 +15,6 @@ _eruake	注册中心
 
 _service	服务提供，访问db
 
-service_api	暴露接口，路由地址
+_service_api	暴露接口，路由地址
 
 sql	建库建表语句
