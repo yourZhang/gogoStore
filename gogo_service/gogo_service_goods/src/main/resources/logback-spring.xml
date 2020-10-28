@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds">
+
+	<!--为了防止进程退出时，内存中的数据丢失，请加上此选项-->
+    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+    
+	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+		<resetJUL>true</resetJUL>
+	</contextListener>
+
+	<!-- To enable JMX Management -->
+	<jmxConfigurator />
+	<!-- 开发测试地址 -->
+	<property name="LOG_HOME" value="/data/logs/test" />
+	<property name="PROD_LOG_HOME" value="/data/logs/prod" />
+	<!-- 控制台输出 -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<!-- encoder 默认配置为PatternLayoutEncoder -->
+		<encoder>
+			<!-- 控制台输出带行号的，例如：2020-02-11 21:46:52  INFO [http-nio-9001-exec-10]
+			 at com.changgou.goods.service.impl.BrandServiceImpl.findById(BrandServiceImpl.java:42) - 查询品牌，品牌ID：1115 -->
+			<pattern>%d{yyyy-MM-dd HH:mm:ss,GMT+08:00} %5p [%t] 
+			%replace(%caller{1}){'\t|Caller.{1}0|\r\n', ''} - %m%n</pattern>
+		</encoder>
+	</appender>
+
+  
+  	<!-- 开发环境+测试环境  -->
+   <springProfile name="dev,test">
+	    <!-- 按照每天生成日志文件 -->
+		<appender name="changgou-goods-dev-test" class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<FileNamePattern>${LOG_HOME}/changgou-goods-dev-test-%d{yyyyMMdd}-${HOSTNAME}.log</FileNamePattern>
+			</rollingPolicy>
+			<encoder>
+				<charset>UTF-8</charset>
+				<!-- 实际日志文件输出不带行号的，例如：
+				2020-02-11 21:46:52  INFO [http-nio-9001-exec-10] [com.changgou.goods.service.impl.BrandServiceImpl] - 查询品牌，品牌ID：1115 -->
+				<pattern>%d{yyyy-MM-dd HH:mm:ss,GMT+08:00} %5p [%t] [%C] - %m%n</pattern>
+			</encoder>
+		</appender>
+	     <root level="INFO">
+			<appender-ref ref="STDOUT" />
+			<appender-ref ref="changgou-goods-dev-test" />
+	     </root>
+    </springProfile>
+
+
+	<!-- 生产环境  -->
+	<springProfile name="prod">
+		<!-- 按照每天生成日志文件 -->
+		<appender name="changgou-goods-prod" class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<FileNamePattern>${PROD_LOG_HOME}/changgou-goods-prod-%d{yyyyMMdd}-${HOSTNAME}.log
+				</FileNamePattern>
+			</rollingPolicy>
+			<encoder>
+				<charset>UTF-8</charset>
+				<!-- 实际日志文件输出不带行号的，例如：
+				2020-02-11 21:46:52  INFO [http-nio-9001-exec-10] [com.changgou.goods.service.impl.BrandServiceImpl] - 查询品牌，品牌ID：1115 -->
+				<pattern>%d{yyyy-MM-dd HH:mm:ss,GMT+08:00} %5p [%t] [%C] - %m%n</pattern>
+			</encoder>
+		</appender>
+		<root level="INFO">
+			<appender-ref ref="STDOUT" />
+			<appender-ref ref="changgou-goods-prod" />
+		</root>
+	</springProfile>
+</configuration>

@@ -23,4 +23,7 @@ public interface BrandService {
     Page<Brand> search2(Integer page, Integer pageSize);
 
     Page<Brand> pageList(Map<String, String> params, Integer page, Integer pageSize);
+
+    List<Brand> findBrandByCateName(String cateName);
+
 }

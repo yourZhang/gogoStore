@@ -146,4 +146,19 @@ public class BrandController {
         final Page<Brand> brands = brandService.pageList(params, page, pageSize);
         return new Result(true, StatusCode.OK, "成功", new PageResult<Brand>(brands.getTotal(), brands.getResult()));
     }
+
+    /**
+     * 功能描述: <br>
+     * 〈根据分类名称查询品牌列表〉
+     *
+     * @Param: [cateName]
+     * @return: com.store.entity.Result
+     * @Author: xiaozhang666
+     * @Date: 2020/10/28 16:10
+     */
+    @GetMapping("cate/{cateName}")
+    public Result findBrandByCateName(@PathVariable String cateName) {
+        List<Brand> brandList = brandService.findBrandByCateName(cateName);
+        return new Result(brandList);
+    }
 }

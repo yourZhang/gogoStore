@@ -102,4 +102,9 @@ public class BrandServiceImpl implements BrandService {
         final List<Brand> brands = brandMapper.selectByExample(example);
         return (Page<Brand>) brands;
     }
+
+    @Override
+    public List<Brand> findBrandByCateName(String cateName) {
+        return brandMapper.findBrandByCateName(cateName);
+    }
 }
