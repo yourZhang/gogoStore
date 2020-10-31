@@ -1,6 +1,7 @@
 package com.store.service;
 
 import com.github.pagehelper.Page;
+import com.store.pojo.Goods;
 import com.store.pojo.Spu;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public interface SpuService {
 
     /**
      * 根据ID查询
+     *
      * @param id
      * @return
      */
@@ -64,6 +66,21 @@ public interface SpuService {
     Page<Spu> findPage(Map<String, Object> searchMap, int page, int size);
 
 
+    void addGoods(Goods goods);
 
+    Goods findGoods(String spuId);
 
+    void updateGoods(Goods goods);
+
+    void auditGoods(String spuId);
+
+    void upGoods(String spuId);
+
+    void down(String spuId);
+
+    void deleteLogic(String spuId);
+
+    void restore(String spuId);
+
+    void deleteGoods(String spuId);
 }

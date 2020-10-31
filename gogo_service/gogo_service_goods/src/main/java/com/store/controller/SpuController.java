@@ -5,6 +5,7 @@ import com.github.pagehelper.Page;
 import com.store.entity.PageResult;
 import com.store.entity.Result;
 import com.store.entity.StatusCode;
+import com.store.pojo.Goods;
 import com.store.pojo.Spu;
 import com.store.service.SpuService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,5 +107,140 @@ public class SpuController {
         Page<Spu> pageList = spuService.findPage(searchMap, page, size);
         PageResult pageResult = new PageResult(pageList.getTotal(), pageList.getResult());
         return new Result(true, StatusCode.OK, "查询成功", pageResult);
+    }
+
+    /**
+     * 功能描述: <br>
+     * 〈sku和spu插入〉
+     *
+     * @Param: [goods]
+     * @return: com.store.entity.Result
+     * @Author: xiaozhang666
+     * @Date: 2020/10/30 20:29
+     */
+    @RequestMapping(value = "addGoods", method = RequestMethod.POST)
+    public Result addGoods(@RequestBody Goods goods) {
+        spuService.addGoods(goods);
+        return new Result("商品新增成功");
+    }
+
+    /**
+     * 功能描述: <br>
+     * 〈根据就id查询〉
+     *
+     * @Param: [spuId]
+     * @return: com.store.entity.Result
+     * @Author: xiaozhang666
+     * @Date: 2020/10/30 20:33
+     */
+    @GetMapping("goods/{spuId}")
+    public Result goods(@PathVariable String spuId) {
+        Goods goods = spuService.findGoods(spuId);
+        return new Result(goods);
+    }
+
+    /**
+     * 功能描述: <br>
+     * 〈修改〉
+     *
+     * @Param: [goods]
+     * @return: com.store.entity.Result
+     * @Author: xiaozhang666
+     * @Date: 2020/10/30 20:41
+     */
+    @PostMapping("updateGoods")
+    public Result updateGoods(@RequestBody Goods goods) {
+        spuService.updateGoods(goods);
+        return new Result("商品更新成功");
+    }
+
+    /**
+     * 功能描述: <br>
+     * 〈商品审核 status=1 审核通过〉
+     *
+     * @Param: [spuId]
+     * @return: com.store.entity.Result
+     * @Author: xiaozhang666
+     * @Date: 2020/10/30 20:41
+     */
+    @PostMapping("auditGoods/{spuId}")
+    public Result auditGoods(@PathVariable String spuId) {
+        spuService.auditGoods(spuId);
+        return new Result("商品审核通过");
+    }
+
+    /**
+     * 功能描述: <br>
+     * 〈商品上架〉
+     *
+     * @Param: [spuId]
+     * @return: com.store.entity.Result
+     * @Author: xiaozhang666
+     * @Date: 2020/10/30 20:44
+     */
+    @PostMapping("upGoods/{spuId}")
+    public Result upGoods(@PathVariable String spuId) {
+        spuService.upGoods(spuId);
+        return new Result("商品上架成功");
+    }
+
+    /**
+     * 功能描述: <br>
+     * 〈下架〉
+     *
+     * @Param: [spuId]
+     * @return: com.store.entity.Result
+     * @Author: xiaozhang666
+     * @Date: 2020/10/30 20:45
+     */
+    @PostMapping("down/{spuId}")
+    public Result down(@PathVariable String spuId) {
+        spuService.down(spuId);
+        return new Result("商品下架成功");
+    }
+
+    /**
+     * 功能描述: <br>
+     * 〈软删除商品〉
+     *
+     * @Param: [spuId]
+     * @return: com.store.entity.Result
+     * @Author: xiaozhang666
+     * @Date: 2020/10/30 20:48
+     */
+    @PostMapping("deleteLogic/{spuId}")
+    public Result deleteLogic(@PathVariable String spuId) {
+        spuService.deleteLogic(spuId);
+        return new Result("商品删除成功");
+    }
+
+    /**
+     * 功能描述: <br>
+     * 〈还原状态〉
+     *
+     * @Param: [spuId]
+     * @return: com.store.entity.Result
+     * @Author: xiaozhang666
+     * @Date: 2020/10/30 20:50
+     */
+    @PostMapping("restore/{spuId}")
+    public Result restore(@PathVariable String spuId) {
+        spuService.restore(spuId);
+        return new Result("商品还原成功");
+    }
+
+    /**
+     * 功能描述: <br>
+     * 〈硬删除〉
+     *
+     * @Param: [spuId]
+     * @return: com.store.entity.Result
+     * @Author: xiaozhang666
+     * @Date: 2020/10/30 20:54
+     */
+    @PostMapping("deleteGoods/{spuId}")
+    public Result deleteGoods(@PathVariable String spuId) {
+        spuService.deleteGoods(spuId);
+        return new Result("商品物理删除成功");
     }
 }

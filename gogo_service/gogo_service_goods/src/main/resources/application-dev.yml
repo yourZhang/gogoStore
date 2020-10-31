@@ -39,3 +39,5 @@ hystrix:
 mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+workId: 1
+dataId: 1
