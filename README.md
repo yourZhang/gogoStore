@@ -7,7 +7,7 @@
 
 ## 目录结构
 
-gogo_canal  
+gogo_canal  监听mysql logbin
 
 gogo_common	公共包，常用工具类，封装返回值
 
