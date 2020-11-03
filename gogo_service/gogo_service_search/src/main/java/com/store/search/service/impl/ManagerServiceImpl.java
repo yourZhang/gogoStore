@@ -84,4 +84,22 @@ public class ManagerServiceImpl implements ManagerService {
         List<Sku> skuList = skuFeign.findBySpuId(spuId);
         saveSkuList(skuList);
     }
+
+    /**
+     * 功能描述: <br>
+     * 〈下架es商品〉
+     *
+     * @Param: [spuId]
+     * @return: void
+     * @Author: xiaozhang666
+     * @Date: 2020/11/3 11:43
+     */
+    @Override
+    public void downBySpuId(String spuId) {
+        final List<Sku> bySpuId = skuFeign.findBySpuId(spuId);
+        bySpuId.forEach((values) -> {
+            skuInfoMapper.deleteById(Long.parseLong(values.getId()));
+        });
+        logger.info("下架成功成功:{}", spuId);
+    }
 }

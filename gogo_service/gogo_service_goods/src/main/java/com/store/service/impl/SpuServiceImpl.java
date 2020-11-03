@@ -116,6 +116,8 @@ public class SpuServiceImpl implements SpuService {
         spu.setId(spuId);
         spu.setIsMarketable("0"); //下架状态
         spuMapper.updateByPrimaryKeySelective(spu);
+        //下架后根据id删除es中的数据
+        rabbitTemplate.convertAndSend("goods_down_exchange", "", spuId);
     }
 
     @Override
