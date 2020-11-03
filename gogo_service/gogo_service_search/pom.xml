@@ -9,31 +9,22 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>gogo_service_business</artifactId>
+    <artifactId>gogo_service_search</artifactId>
     <dependencies>
+        <!--goods服务 goods feign-->
         <dependency>
             <groupId>com.store</groupId>
-            <artifactId>gogo_common_db</artifactId>
+            <artifactId>gogo_service_goods_api</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.store</groupId>
-            <artifactId>gogo_service_business_api</artifactId>
+            <artifactId>gogo_service_search_api</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.amqp</groupId>
-            <artifactId>spring-rabbit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>3.9.0</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
     </dependencies>
-
 </project>

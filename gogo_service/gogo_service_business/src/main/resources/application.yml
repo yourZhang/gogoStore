@@ -1,8 +1,11 @@
 server:
   port: 9004
 spring:
+  rabbitmq:
+    host: 192.168.200.128
   application:
     name: business
+    #在spring节点下一级
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://192.168.200.128:3306/changgou_business?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC

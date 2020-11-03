@@ -64,6 +64,7 @@ public interface SkuService {
     Page<Sku> findPage(Map<String, Object> searchMap, int page, int size);
 
 
+    List<Sku> findAllList();
 
-
+    List<Sku> findBySpuId(String spuId);
 }

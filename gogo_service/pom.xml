@@ -18,6 +18,7 @@
         <module>gogo_service_config</module>
         <module>gogo_service_consume</module>
         <module>gogo_service_system</module>
+        <module>gogo_service_search</module>
     </modules>
 
 

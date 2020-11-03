@@ -10,6 +10,7 @@ import com.store.service.SpuService;
 import com.store.util.IdWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,8 @@ public class SpuServiceImpl implements SpuService {
     private CategoryBrandMapper categoryBrandMapper;
     @Autowired
     private SkuMapper skuMapper;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -97,6 +100,10 @@ public class SpuServiceImpl implements SpuService {
             spu1.setId(spuId);
             spu1.setIsMarketable("1");
             spuMapper.updateByPrimaryKeySelective(spu1);
+             /*
+                上架成功发送spuId至mq
+             */
+            rabbitTemplate.convertAndSend("goods_up_exchange", "", spuId);
         } else {
             //3.如果未通过则抛出异常----》运行时异常---》未审核商品不得上架
             throw new RuntimeException("未审核商品不得上架....");
