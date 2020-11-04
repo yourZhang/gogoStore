@@ -15,6 +15,10 @@ import org.springframework.stereotype.Component;
  * @create: 2020-11-03 11:40
  **/
 @Component
+/*
+* goods_del_exchange
+* 绑定 search_del_queue队列
+* */
 @RabbitListener(queues = "search_del_queue")
 public class DownGoodsListener {
 

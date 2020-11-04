@@ -10,6 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+/*
+* - 创建广播类型交换机： goods_up_exchange
+- 创建search_add_queue、page_create_queue两个队列并且与 goods_up_exchange完成绑定
+* */
 @RabbitListener(queues = "search_add_queue")
 public class UpGoodsListener {
 
