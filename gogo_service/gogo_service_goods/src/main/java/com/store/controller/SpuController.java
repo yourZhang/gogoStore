@@ -45,6 +45,20 @@ public class SpuController {
         return new Result(true, StatusCode.OK, "查询成功", spu);
     }
 
+    /**
+     * 功能描述: <br>
+     * 〈查询单个副本〉
+     *
+     * @Param: [id]
+     * @return: com.store.pojo.Spu
+     * @Author: xiaozhang666
+     * @Date: 2020/11/5 16:14
+     */
+    @GetMapping("findOne/{id}")
+    public Spu findByIds(@PathVariable String id) {
+        Spu spu = spuService.findById(id);
+        return spu;
+    }
 
     /***
      * 新增数据

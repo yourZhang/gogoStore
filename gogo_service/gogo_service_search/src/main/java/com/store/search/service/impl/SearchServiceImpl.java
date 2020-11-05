@@ -154,8 +154,8 @@ public class SearchServiceImpl implements SearchService {
 
         /*
             需求四： 规格列表分组聚合--->设置条件
-                1.组名
-                2.分组字段
+                组名
+                分组字段
          */
         String specGroup = "specGroup";
         //"spec.keyword" 由于再索引库中没有指定字段类型，所以默认为text，text不能使用聚合，所以临时转换为 keyword
