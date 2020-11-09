@@ -15,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * Spring Security 核心配置文件
  * 校验 消费方(用户)信息
  * 对消费者(用户)请求 判断 有些请求是放行的 有些请求是必须拦截的
- *
  */
 @Configuration
 @EnableWebSecurity
@@ -23,8 +22,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
-     *  设置不需要拦截的请求
-     *  包含静态资源
+     * 设置不需要拦截的请求
+     * 包含静态资源
+     *
      * @param web
      * @throws Exception
      */
@@ -71,6 +71,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * 配置必须拦截的请求
      * 配置登录表单
+     *
      * @param http
      * @throws Exception
      */
@@ -85,14 +86,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated();       //其他请求都需要经过验证
 
-        //配置springSecurity要跳转登录页面的访问路径
-        http.formLogin().loginPage("/oauth/toLogin").
-                //配置springSecurity执行登录的访问路径
-                loginProcessingUrl("/oauth/login");
+////配置springSecurity要跳转登录页面的访问路径
+//        http.formLogin().loginPage("/oauth/toLogin").
+//                //配置springSecurity执行登录的访问路径
+//                        loginProcessingUrl("/oauth/login");
     }
 
     /**
      * BCrypt算法, 加密密码测试方法
+     *
      * @param args
      */
     public static void main(String[] args) {
