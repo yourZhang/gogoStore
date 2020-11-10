@@ -17,6 +17,7 @@
         <module>gogo_user_oauth</module>
         <module>gogo_canal</module>
         <module>gogo_gateway</module>
+        <module>gogo_web</module>
     </modules>
 
     <parent>

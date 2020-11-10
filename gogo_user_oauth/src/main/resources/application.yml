@@ -27,13 +27,13 @@ eureka:
       defaultZone: http://127.0.0.1:6868/eureka
 auth:
   ttl: 3600  #token存储到redis的过期时间
-  clientId: store
-  clientSecret: store
-  cookieDomain: .store.com
+  clientId: changgou
+  clientSecret: changgou
+  cookieDomain: .changgou.com
   cookieMaxAge: -1
 encrypt:
   key-store:
     location: classpath:/changgou.jks
-    secret: store
-    alias: store
-    password: store
+    secret: changgou #
+    alias: changgou #
+    password: changgou #

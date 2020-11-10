@@ -20,6 +20,8 @@
         <module>gogo_service_system</module>
         <module>gogo_service_search</module>
         <module>gogo_service_page</module>
+        <module>gogo_service_user</module>
+        <module>gogo_service_order</module>
     </modules>
 
 

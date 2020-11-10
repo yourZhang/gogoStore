@@ -38,4 +38,26 @@ public interface SkuFeign {
      */
     @GetMapping("findBySpuId/{spuId}")
     List<Sku> findBySpuId(@PathVariable("spuId") String spuId);
+
+    /**
+     * @Author: guodong
+     * @Date: 14:38 2020/11/2
+     * @Parms []
+     * @ReturnType: java.util.List<com.changgou.goods.pojo.Sku>
+     * @Description: 查询所有sku数据
+     */
+    @GetMapping
+    List<Sku> findAll();
+
+    /**
+     * 功能描述: <br>
+     * 〈根据id查询数据〉
+     *
+     * @Param: [id]
+     * @return: com.store.pojo.Sku
+     * @Author: xiaozhang666
+     * @Date: 2020/11/10 14:10
+     */
+    @GetMapping("/one/{id}")
+    public Sku findOneById(@PathVariable(value = "id") String id);
 }
