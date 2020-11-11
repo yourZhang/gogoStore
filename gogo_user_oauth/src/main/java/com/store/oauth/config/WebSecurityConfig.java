@@ -87,9 +87,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticated();       //其他请求都需要经过验证
 
 ////配置springSecurity要跳转登录页面的访问路径
-//        http.formLogin().loginPage("/oauth/toLogin").
-//                //配置springSecurity执行登录的访问路径
-//                        loginProcessingUrl("/oauth/login");
+        http.formLogin().loginPage("/oauth/toLogin").
+                //配置springSecurity执行登录的访问路径
+                        loginProcessingUrl("/oauth/login");
     }
 
     /**

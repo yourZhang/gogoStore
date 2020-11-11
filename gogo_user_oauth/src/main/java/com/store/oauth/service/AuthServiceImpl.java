@@ -50,6 +50,7 @@ public class AuthServiceImpl implements AuthService {
 
         //2. 将认证微服务的ip和端口 + oauth2的认证地址拼接成完整的url请求路径
         String url = choose.getUri() + "/oauth/token";
+       // String url = "http://localhost:9200/oauth/token";
 
         //3. 封装请求头, 使用httpBasic协议封装, 客户端id和秘钥
         MultiValueMap head = new LinkedMultiValueMap();

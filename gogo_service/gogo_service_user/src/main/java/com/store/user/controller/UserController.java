@@ -44,10 +44,9 @@ public class UserController {
         return new Result(true, StatusCode.OK, "查询成功", user);
     }
 
-    @GetMapping("/one/{username}")
-    public Result findByIdOne(@PathVariable String username) {
-        User user = userService.findById(username);
-        return new Result(true, StatusCode.OK, "查询成功", user);
+    @GetMapping("/ones/{username}")
+    public User findByIdOne(@PathVariable("username") String username) {
+        return userService.findById(username);
     }
 
     /***

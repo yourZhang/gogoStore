@@ -63,15 +63,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         //此处写死 和 从数据库中查询只能使用一个
 //        String pwd = new BCryptPasswordEncoder().encode("itheima");
         //从数据库中查询  --   通过查询的对象的密码进行匹配
-        final com.store.entity.Result byId = userFeign.findByIdOne(username);
-        final com.store.user.pojo.User userData = (com.store.user.pojo.User) byId.getData();
-        if (userData == null) {
+        final com.store.user.pojo.User byId = userFeign.findByIdOne(username);
+        if (byId == null) {
             throw new RuntimeException("根据用户名无法查询到对应的用户对象! 用户名是:" + username);
         }
         //创建权限字符串
         String permissions = "goods_list,seckill_list";
         //创建用户JWT对象
-        UserJwt userDetails = new UserJwt(username, userData.getPassword(), AuthorityUtils.commaSeparatedStringToAuthorityList(permissions));
+        UserJwt userDetails = new UserJwt(username, byId.getPassword(), AuthorityUtils.commaSeparatedStringToAuthorityList(permissions));
         //返回用户JWT对象
         return userDetails;
     }

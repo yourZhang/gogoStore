@@ -1,6 +1,5 @@
 package com.store.order.service.impl;
 
-
 import com.store.entity.Constants;
 import com.store.feign.SkuFeign;
 import com.store.feign.SpuFeign;
@@ -45,14 +44,12 @@ public class CartServiceImpl implements CartService {
         int totalCount = 0;
         //总购买金额
         int totalPrice = 0;
-
         if (cartList != null) {
             for (OrderItem orderItem : cartList) {
                 totalCount += orderItem.getNum();
                 totalPrice += orderItem.getMoney();
             }
         }
-
         //3. 将计算得出的总购买数量和总购买金额还有购物车列表数据封装成map返回
         Map<String, Object> resultMap = new HashMap<>();
         //购物项集合
@@ -61,7 +58,6 @@ public class CartServiceImpl implements CartService {
         resultMap.put("totalNum", totalCount);
         //总购买金额
         resultMap.put("totalPrice", totalPrice);
-
         return resultMap;
     }
 
@@ -69,7 +65,6 @@ public class CartServiceImpl implements CartService {
     public void addAndUpdate(String skuId, Integer num, String userName) {
         //1. 根据用户名和skuId到redis中获取购物项对象
         OrderItem orderItem = (OrderItem) redisTemplate.boundHashOps(Constants.REDIS_CART + userName).get(skuId);
-
         //2. 判断是否能够获取到购物项对象
         if (orderItem != null) {
             //3. 如果获取到购物项对象则更改购买数量, 支付金额等数据
@@ -88,9 +83,58 @@ public class CartServiceImpl implements CartService {
             //4. 如果获取不到购物项对象, 新建购物项对象
             orderItem = createOrderItem(skuId, num, userName);
         }
-
         //5. 将最新的购物项对象放回到redis中覆盖redis中的老数据
         redisTemplate.boundHashOps(Constants.REDIS_CART + userName).put(skuId, orderItem);
+    }
+
+    @Override
+    public void delete(String skuId, String userName) {
+        redisTemplate.boundHashOps(Constants.REDIS_CART + userName).delete(skuId);
+    }
+
+    @Override
+    public void updateChecked(String skuId, boolean checked, String userName) {
+        //1. 根据用户名和skuId到redis中获取对应的购物项对象
+        OrderItem orderItem = (OrderItem) redisTemplate.boundHashOps(Constants.REDIS_CART + userName).get(skuId);
+        //2. 判断这个购物项对象不为空
+        if (orderItem != null) {
+            //3. 将复选框数据放入购物项对象中
+            orderItem.setChecked(checked);
+            //4. 将购物项对象从新放回到redis中, 更新redis中的数据
+            redisTemplate.boundHashOps(Constants.REDIS_CART + userName).put(skuId, orderItem);
+        }
+    }
+
+    @Override
+    public Map<String, Object> buyList(String userName) {
+        //1. 根据用户名到redis中获取购物车列表
+        List<OrderItem> cartList = (List<OrderItem>) redisTemplate.boundHashOps(Constants.REDIS_CART + userName).values();
+        //2. 计算购物车中的总购买数量和总购买金额
+        //总购买数量
+        int totalCount = 0;
+        //总购买金额
+        int totalPrice = 0;
+        if (cartList != null) {
+            for (OrderItem orderItem : cartList) {
+                //判断购物车中的勾选状态为已勾选, 计算总购买金额和总价格
+                if (orderItem.isChecked()) {
+                    totalCount += orderItem.getNum();
+                    totalPrice += orderItem.getMoney();
+                } else {
+                    //未勾选状态从购物车列表剔除, 不显示
+                    cartList.remove(orderItem);
+                }
+            }
+        }
+        //3. 将计算得出的总购买数量和总购买金额还有购物车列表数据封装成map返回
+        Map<String, Object> resultMap = new HashMap<>();
+        //购物项集合
+        resultMap.put("orderItemList", cartList);
+        //总购买数量
+        resultMap.put("totalNum", totalCount);
+        //总购买金额
+        resultMap.put("totalPrice", totalPrice);
+        return resultMap;
     }
 
     /**
@@ -154,4 +198,6 @@ public class CartServiceImpl implements CartService {
         orderItem.setPrice(sku.getPrice());
         return orderItem;
     }
+
+
 }

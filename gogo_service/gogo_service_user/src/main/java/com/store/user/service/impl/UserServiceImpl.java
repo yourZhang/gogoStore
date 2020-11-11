@@ -3,7 +3,7 @@ package com.store.user.service.impl;
 
 
 import com.github.pagehelper.PageHelper;
-import com.store.entity.Page;
+import com.github.pagehelper.Page;
 import com.store.user.mapper.UserMapper;
 import com.store.user.pojo.User;
 import com.store.user.service.UserService;

@@ -34,4 +34,37 @@ public interface CartFeign {
      */
     @GetMapping("/add/{skuId}/{num}")
     public void addAndUpdate(@PathVariable(value = "skuId") String skuId, @PathVariable(value = "num") Integer num);
+
+    /**
+     * 删除购物车中的购物项
+     *
+     * @param skuId
+     */
+    @GetMapping("/delete/{skuId}")
+    public void delete(@PathVariable(value = "skuId") String skuId);
+
+    /**
+     * 功能描述: <br>
+     * 〈获取消费者购物车(复选框都为勾选的购物项)〉
+     *
+     * @Param: []
+     * @return: java.util.Map<java.lang.String, java.lang.Object>
+     * @Author: xiaozhang666
+     * @Date: 2020/11/11 20:31
+     */
+    @GetMapping("/buyList")
+    public Map<String, Object> buyList();
+
+    /**
+     * 功能描述: <br>
+     * 〈更新购物车列表复选框状态〉
+     *
+     * @Param: [skuId, checked]
+     * @return: void
+     * @Author: xiaozhang666
+     * @Date: 2020/11/11 19:54
+     */
+    @GetMapping("/updateChecked/{skuId}/{checked}")
+    public void updateChecked(@PathVariable(value = "skuId") String skuId,
+                              @PathVariable(value = "checked") boolean checked);
 }

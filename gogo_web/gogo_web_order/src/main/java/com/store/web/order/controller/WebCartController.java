@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Map;
@@ -50,6 +51,38 @@ public class WebCartController {
     public String addAndUpdate(String skuId, Integer num) {
         //feign调用订单业务微服务, 添加和修改购物车中的购物项数据
         cartFeign.addAndUpdate(skuId, num);
+        //重定向到, 查询购物车列表方法
+        return "redirect:http://web.changgou.com:8001/api/wcart/list";
+    }
+
+    /**
+     * 功能描述: <br>
+     * 〈删除购物车中的购物项〉
+     *
+     * @Param: [skuId]
+     * @return: java.lang.String
+     * @Author: xiaozhang666
+     * @Date: 2020/11/11 19:43
+     */
+    @GetMapping("/delete")
+    public String delete(String skuId) {
+        cartFeign.delete(skuId);
+        //重定向到, 查询购物车列表方法
+        return "redirect:http://web.changgou.com:8001/api/wcart/list";
+    }
+
+    /**
+     * 功能描述: <br>
+     * 〈更新购物车复选框状态〉
+     *
+     * @Param: [skuId, checked]
+     * @return: java.lang.String
+     * @Author: xiaozhang666
+     * @Date: 2020/11/11 19:43
+     */
+    @GetMapping("/updateChecked")
+    public String updateChecked(String skuId, boolean checked) {
+        cartFeign.updateChecked(skuId, checked);
         //重定向到, 查询购物车列表方法
         return "redirect:http://web.changgou.com:8001/api/wcart/list";
     }

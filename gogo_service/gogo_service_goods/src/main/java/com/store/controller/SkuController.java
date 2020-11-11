@@ -43,6 +43,10 @@ public class SkuController {
         return new Result(true, StatusCode.OK, "查询成功", sku);
     }
 
+    @GetMapping("/one/{id}")
+    public Sku findOneById(@PathVariable String id) {
+        return skuService.findById(id);
+    }
 
     /***
      * 新增数据
@@ -134,4 +138,6 @@ public class SkuController {
     public List<Sku> findBySpuId(@PathVariable("spuId") String spuId) {
         return skuService.findBySpuId(spuId);
     }
+
+
 }
