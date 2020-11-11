@@ -21,23 +21,30 @@ public class WebCartController {
     private CartFeign cartFeign;
 
     /**
-     * 查询购物车列表数据, 返回到购物车页面
-     * @return
+     * 功能描述: <br>
+     * 〈查询购物车列表数据, 返回到购物车页面〉
+     *
+     * @Param: [model]
+     * @return: java.lang.String
+     * @Author: xiaozhang666
+     * @Date: 2020/11/11 14:37
      */
     @GetMapping("/list")
     public String list(Model model) {
         //feign调用订单业务微服务, 查询购物车列表数据返回
         Map<String, Object> cartMap = cartFeign.list();
-
         model.addAttribute("result", cartMap);
         return "cart";
     }
 
     /**
-     * 购物车添加和修改购物项
-     * @param skuId 库存id
-     * @param num   购买数量(购买数量可能是正数也可能是负数)
-     * @return
+     * 功能描述: <br>
+     * 〈购物车添加和修改购物项〉
+     *
+     * @Param: [skuId, num]
+     * @return: java.lang.String
+     * @Author: xiaozhang666
+     * @Date: 2020/11/11 14:38
      */
     @GetMapping("/add")
     public String addAndUpdate(String skuId, Integer num) {

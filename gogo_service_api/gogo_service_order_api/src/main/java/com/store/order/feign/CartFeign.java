@@ -15,14 +15,20 @@ import java.util.Map;
 public interface CartFeign {
 
     /**
-     * 查询购物车数据返回
-     * @return
+     * 功能描述: <br>
+     * 〈查询购物车数据返回〉
+     *
+     * @Param: []
+     * @return: java.util.Map<java.lang.String, java.lang.Object>
+     * @Author: xiaozhang666
+     * @Date: 2020/11/11 15:04
      */
     @GetMapping("/list")
     public Map<String, Object> list();
 
     /**
      * 添加修改购物车中的购物项
+     *
      * @param skuId 库存id
      * @param num   购买数量
      */
