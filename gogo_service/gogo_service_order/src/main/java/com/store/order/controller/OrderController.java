@@ -5,6 +5,7 @@ import com.github.pagehelper.Page;
 import com.store.entity.PageResult;
 import com.store.entity.Result;
 import com.store.entity.StatusCode;
+import com.store.order.config.TokenDecode;
 import com.store.order.pojo.Order;
 import com.store.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private TokenDecode tokenDecode;
 
     /**
      * 查询全部数据
@@ -51,6 +55,11 @@ public class OrderController {
      */
     @PostMapping
     public Result add(@RequestBody Order order){
+        //1. 获取当前登录用户的用户名
+        Map<String, String> userInfo = tokenDecode.getUserInfo();
+        String username = userInfo.get("username");
+        //2. 调用service保存提交订单
+        order.setUsername(username);
         orderService.add(order);
         return new Result(true,StatusCode.OK,"添加成功");
     }

@@ -33,6 +33,16 @@ public class SkuServiceImpl implements SkuService {
         return skuMapper.select(sku);
     }
 
+    @Override
+    public void decrCount(String skuId, Integer num) {
+        skuMapper.decrCount(skuId, num);
+    }
+
+    @Override
+    public void incrCount(String skuId, Integer num) {
+        skuMapper.incrCount(skuId, num);
+    }
+
     /**
      * 查询全部列表
      *

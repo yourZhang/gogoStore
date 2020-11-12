@@ -60,4 +60,28 @@ public interface SkuFeign {
      */
     @GetMapping("/one/{id}")
     public Sku findOneById(@PathVariable(value = "id") String id);
+
+    /**
+     * 功能描述: <br>
+     * 〈扣减库存, 增加销量〉
+     *
+     * @Param: [skuId, num]
+     * @return: void
+     * @Author: xiaozhang666
+     * @Date: 2020/11/12 15:08
+     */
+    @GetMapping("/decrCount/{skuId}/{num}")
+    public void decrCount(@PathVariable(value = "skuId") String skuId, @PathVariable(value = "num") Integer num);
+
+    /**
+     * 功能描述: <br>
+     * 〈恢复库存和销量〉
+     *
+     * @Param: [skuId, num]
+     * @return: void
+     * @Author: xiaozhang666
+     * @Date: 2020/11/12 15:08
+     */
+    @GetMapping("/incrCount/{skuId}/{num}")
+    public void incrCount(@PathVariable(value = "skuId") String skuId, @PathVariable(value = "num") Integer num);
 }

@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean;
  */
 @SpringBootApplication
 @EnableEurekaClient
-@EnableFeignClients(basePackages = {"com.store.order.feign","com.store.user.feign"})
+@EnableFeignClients(basePackages = {"com.store.order.feign","com.store.user.feign","com.store.pay.feign"})
 public class WebOrderApplication {
 
     public static void main(String[] args) {

@@ -139,5 +139,29 @@ public class SkuController {
         return skuService.findBySpuId(spuId);
     }
 
+    /**
+     * 功能描述: <br>
+     * 〈扣减库存, 增加销量〉
+     *
+     * @Param: [skuId, num]
+     * @return: void
+     * @Author: xiaozhang666
+     * @Date: 2020/11/12 15:09
+     */
+    @GetMapping("/decrCount/{skuId}/{num}")
+    public void decrCount(@PathVariable(value = "skuId") String skuId, @PathVariable(value = "num") Integer num) {
+        skuService.decrCount(skuId, num);
+    }
+
+    /**
+     * 恢复库存和销量
+     *
+     * @param skuId
+     * @param num
+     */
+    @GetMapping("/incrCount/{skuId}/{num}")
+    public void incrCount(@PathVariable(value = "skuId") String skuId, @PathVariable(value = "num") Integer num) {
+        skuService.incrCount(skuId, num);
+    }
 
 }

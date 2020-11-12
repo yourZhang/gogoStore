@@ -66,7 +66,6 @@ public class WebOrderController {
     public String submit(Order order) {
         //通过feign远程调用订单业务微服务
         orderFeign.add(order);
-        //重定向到预支付接口
-        return "";
+        return "redirect:http://web.changgou.com:8001/api/wpay/nativePay";
     }
 }

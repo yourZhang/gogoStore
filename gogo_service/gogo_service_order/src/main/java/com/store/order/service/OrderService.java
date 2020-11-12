@@ -64,7 +64,12 @@ public interface OrderService {
      */
     Page<Order> findPage(Map<String, Object> searchMap, int page, int size);
 
-
+    /**
+     * 支付成功订单业务处理
+     * @param transId   交易流水号
+     * @param orderId   订单号
+     */
+    public void paySuccessOrder(String transId, String orderId);
 
 
 }
