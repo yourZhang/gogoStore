@@ -69,4 +69,33 @@ public class PayServiceImpl implements PayService {
          */
         return resultMap;
     }
+
+    @Override
+    public Map<String, String> queryPay(String orderId) {
+
+        Map<String,String> paramMap = new HashMap<>();
+        paramMap.put("out_trade_no", orderId);
+
+        try {
+            Map<String, String> resultMap = wxPay.orderQuery(paramMap);
+            return resultMap;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Map<String, String> closePay(String orderId) {
+        Map<String,String> paramMap = new HashMap<>();
+        paramMap.put("out_trade_no", orderId);
+
+        try {
+            Map<String, String> resultMap = wxPay.closeOrder(paramMap);
+            return resultMap;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

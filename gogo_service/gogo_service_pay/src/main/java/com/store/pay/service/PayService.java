@@ -13,4 +13,17 @@ public interface PayService {
      * @return
      */
     public Map<String, String> nativePay(String userName);
+    /**
+     * 调用微信查询接口
+     * @param orderId
+     * @return
+     */
+    public Map<String, String> queryPay(String orderId);
+
+    /**
+     * 调用微信关闭支付通道接口
+     * @param orderId
+     * @return
+     */
+    public Map<String, String> closePay(String orderId);
 }

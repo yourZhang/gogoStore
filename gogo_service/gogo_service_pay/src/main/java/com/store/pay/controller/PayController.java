@@ -8,8 +8,10 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -33,6 +35,7 @@ public class PayController {
 
     /**
      * 预支付接口
+     *
      * @return
      */
     @GetMapping("/nativePay")
@@ -47,6 +50,7 @@ public class PayController {
 
     /**
      * 回调接口, 接收内网穿透服务器发来的支付成功消息
+     *
      * @return
      */
     @RequestMapping("/notify")
@@ -72,14 +76,12 @@ public class PayController {
         paySuccessMap.put("out_trade_no", out_trade_no);
         paySuccessMap.put("transaction_id", transaction_id);
         rabbitTemplate.convertAndSend("", "order_pay", JSON.toJSONString(paySuccessMap));
-
         /**
          * 将订单id发送到rabbitmq的paynotify交换器中
          * paynotify交换器会将支付成功的订单号推送到消费者页面
          * 使用的是websocket多链路双向通讯技术
          */
         rabbitTemplate.convertAndSend("paynotify", "", out_trade_no);
-
         /**
          * 封装返回给微信服务器的数据返回, 告诉微信, 别再给我回调数据了, 我收到了
          */
@@ -87,5 +89,35 @@ public class PayController {
         wxResultMap.put("return_code", "SUCCESS");
         wxResultMap.put("return_msg", "OK");
         return WXPayUtil.mapToXml(wxResultMap);
+    }
+
+    /**
+     * 功能描述: <br>
+     * 〈调用微信查询接口查询是否支付成功〉
+     *
+     * @Param: [orderId]
+     * @return: java.util.Map<java.lang.String, java.lang.String>
+     * @Author: xiaozhang666
+     * @Date: 2020/11/13 16:19
+     */
+    @GetMapping("/query/{orderId}")
+    public Map<String, String> queryPay(@PathVariable(value = "orderId") String orderId) {
+        Map<String, String> resultMap = payService.queryPay(orderId);
+        return resultMap;
+    }
+
+    /**
+     * 功能描述: <br>
+     * 〈调用微信关闭支付通道接口, 关闭支付〉
+     *
+     * @Param: [orderId]
+     * @return: java.util.Map<java.lang.String, java.lang.String>
+     * @Author: xiaozhang666
+     * @Date: 2020/11/13 16:19
+     */
+    @GetMapping("/close/{orderId}")
+    public Map<String, String> closePay(@PathVariable(value = "orderId") String orderId) {
+        Map<String, String> resultMap = payService.closePay(orderId);
+        return resultMap;
     }
 }

@@ -5,7 +5,9 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.netflix.discovery.converters.Auto;
 import com.store.entity.Constants;
+import com.store.entity.Result;
 import com.store.feign.SkuFeign;
+import com.store.order.config.RabbitMQConfig;
 import com.store.order.dao.OrderItemMapper;
 import com.store.order.dao.OrderLogMapper;
 import com.store.order.dao.OrderMapper;
@@ -15,10 +17,16 @@ import com.store.order.pojo.OrderLog;
 import com.store.order.service.CartService;
 import com.store.order.service.OrderItemService;
 import com.store.order.service.OrderService;
+import com.store.pay.feign.PayFeign;
 import com.store.util.IdWorker;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessagePostProcessor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
@@ -48,6 +56,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderLogMapper orderLogMapper;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     /**
      * 查询全部列表
@@ -145,6 +156,23 @@ public class OrderServiceImpl implements OrderService {
              */
             cartService.delete(orderItem.getSkuId(), order.getUsername());
         }
+        /**
+         * 7. 将订单号, 发送到延时消息队列 ,设置订单超时时间为20分钟
+         */
+        //参数1:发送到的队列名称, 参数2: 发送内容, 参数3: 实现一个接口设置消息超时时间
+        rabbitTemplate.convertAndSend(RabbitMQConfig.RELAY_QUEUE, (Object) order.getId(), new MessagePostProcessor() {
+
+            /**
+             * 设置消息超时时间, 在规定时间内必须被消费,
+             * 没有被消费会认为是死信, 会被mq自动发送到死信交换器中
+             * 超时时间30分钟, 测试这个流程需要尽快测试, 所以改成10秒
+             */
+            @Override
+            public Message postProcessMessage(Message message) throws AmqpException {
+                message.getMessageProperties().setExpiration("10000");
+                return message;
+            }
+        });
     }
 
 
@@ -251,6 +279,167 @@ public class OrderServiceImpl implements OrderService {
         //支付状态, 1已支付
         orderLog.setPayStatus("1");
         orderLogMapper.insertSelective(orderLog);
+    }
+
+    @Override
+    public Result recive(String orderId) {
+        Order order = new Order();
+        //订单主键id
+        order.setId(orderId);
+        //订单更新时间
+        order.setUpdateTime(new Date());
+        //订单状态
+        order.setOrderStatus(Constants.ORDER_STATUS_8);
+        //发货状态, 2已收货
+        order.setConsignStatus("2");
+        //订单结束时间
+        order.setEndTime(new Date());
+
+        orderMapper.updateByPrimaryKeySelective(order);
+
+        //6. 记录订单变动日志
+        OrderLog orderLog = new OrderLog();
+        //日志主键id
+        orderLog.setId(String.valueOf(idWorker.nextId()));
+        //订单状态,
+        orderLog.setOrderStatus(Constants.ORDER_STATUS_8);
+        //订单id
+        orderLog.setOrderId(orderId);
+        //操作时间
+        orderLog.setOperateTime(new Date());
+        //发货状态, 2已收货
+        orderLog.setConsignStatus("2");
+        //操作人, system系统自动操作
+        orderLog.setOperater("system");
+        //支付状态, 1已支付
+        orderLog.setPayStatus("1");
+
+        orderLogMapper.insertSelective(orderLog);
+
+        return null;
+    }
+
+    @Autowired
+    private PayFeign payFeign;
+
+    @Override
+    public void cancelPayOrder(String orderId) {
+        /**
+         * 1. 根据订单id, 调用微信关闭接口, 关闭支付通道
+         */
+        Map<String, String> wxResultMap = payFeign.closePay(orderId);
+
+        /**
+         * 2. 根据订单id, 到数据库订单表查询订单对象
+         */
+        Order order = orderMapper.selectByPrimaryKey(orderId);
+
+        /**
+         * 3. 修改订单状态为超时关闭
+         */
+        //订单状态
+        order.setOrderStatus(Constants.ORDER_STATUS_9);
+        //更新时间
+        order.setUpdateTime(new Date());
+        //订单关闭时间
+        order.setCloseTime(new Date());
+        //订单结束时间
+        order.setEndTime(new Date());
+        orderMapper.updateByPrimaryKeySelective(order);
+
+        /**
+         * 4. 删除redis中的待支付订单对象
+         */
+        redisTemplate.delete(Constants.REDIS_ORDER_PAY + order.getUsername());
+
+        /**
+         * 5. 恢复库存和销量
+         */
+        Example example = new Example(OrderItem.class);
+        Example.Criteria criteria = example.createCriteria();
+        //根据订单id作为查询条件
+        criteria.andEqualTo("orderId", orderId);
+
+        //查询订单详情表, 根据订单id作为查询条件
+        List<OrderItem> orderItemList = orderItemMapper.selectByExample(example);
+        if (orderItemList != null) {
+            for (OrderItem orderItem : orderItemList) {
+                skuFeign.incrCount(orderItem.getSkuId(), orderItem.getNum());
+            }
+        }
+
+        /**
+         * 6. 记录订单变动日志
+         */
+
+        OrderLog orderLog = new OrderLog();
+        //日志主键id
+        orderLog.setId(String.valueOf(idWorker.nextId()));
+        //订单状态, 9超时结束
+        orderLog.setOrderStatus(Constants.ORDER_STATUS_9);
+        //订单id
+        orderLog.setOrderId(orderId);
+        //操作时间
+        orderLog.setOperateTime(new Date());
+        //发货状态, 0未发货
+        orderLog.setConsignStatus("0");
+        //操作人, system系统自动操作
+        orderLog.setOperater("system");
+        //支付状态, 0未支付
+        orderLog.setPayStatus("0");
+
+        orderLogMapper.insertSelective(orderLog);
+    }
+
+    @Override
+    public Result bashSend(List<Order> orderList) {
+        //1. 遍历订单集合
+        if (orderList != null) {
+            for (Order order : orderList) {
+                //2. 判断物流单号不为空
+                if (StringUtils.isEmpty(order.getShippingCode())) {
+                    throw new RuntimeException("物流单号不能为空!");
+                }
+                //3. 判断物流公司名称不为空
+                if (StringUtils.isEmpty(order.getShippingName())) {
+                    throw new RuntimeException("物流公司不能为空!");
+                }
+                //4. 修改订单状态为已发货
+                //发货状态, 1已发货
+                order.setConsignStatus("1");
+                //发货时间
+                order.setConsignTime(new Date());
+                //订单状态
+                order.setOrderStatus(Constants.ORDER_STATUS_3);
+                //订单更新时间
+                order.setUpdateTime(new Date());
+                orderMapper.updateByPrimaryKeySelective(order);
+
+                //5. todo 对接物流公司平台的预约取件接口
+
+                //6. 记录订单变动日志
+                OrderLog orderLog = new OrderLog();
+                //日志主键id
+                orderLog.setId(String.valueOf(idWorker.nextId()));
+                //订单状态,
+                orderLog.setOrderStatus(Constants.ORDER_STATUS_3);
+                //订单id
+                orderLog.setOrderId(order.getId());
+                //操作时间
+                orderLog.setOperateTime(new Date());
+                //发货状态, 1已发货
+                orderLog.setConsignStatus("1");
+                //操作人, system系统自动操作
+                orderLog.setOperater("system");
+                //支付状态, 1已支付
+                orderLog.setPayStatus("1");
+
+                orderLogMapper.insertSelective(orderLog);
+            }
+
+        }
+
+        return null;
     }
 
     /**

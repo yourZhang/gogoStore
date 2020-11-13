@@ -2,6 +2,7 @@ package com.store.order.service;
 
 
 import com.github.pagehelper.Page;
+import com.store.entity.Result;
 import com.store.order.pojo.Order;
 
 import java.util.List;
@@ -71,5 +72,24 @@ public interface OrderService {
      */
     public void paySuccessOrder(String transId, String orderId);
 
+    /**
+     * 支付超时业务处理
+     * @param orderId
+     */
+    public void cancelPayOrder(String orderId);
+
+    /**
+     * 批量发货
+     * @param orderList
+     * @return
+     */
+    public Result bashSend(List<Order> orderList);
+
+    /**
+     * 手动收货
+     * @param orderId
+     * @return
+     */
+    public Result recive(String orderId);
 
 }
