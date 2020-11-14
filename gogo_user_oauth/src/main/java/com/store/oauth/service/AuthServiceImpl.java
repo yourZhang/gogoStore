@@ -64,10 +64,8 @@ public class AuthServiceImpl implements AuthService {
         body.add("username", userName);
         //设置消费者密码
         body.add("password", password);
-
         //5. 将请求头和请求体合成请求对象
         HttpEntity<MultiValueMap> httpEntity = new HttpEntity<>(body, head);
-
         //6. 设置发送请求时候, 自定义异常处理信息
         restTemplate.setErrorHandler(new DefaultResponseErrorHandler() {
             //设置发送请求遇到的异常处理, 如果遇到400或401代表权限不足, 不算异常不抛出
@@ -79,7 +77,6 @@ public class AuthServiceImpl implements AuthService {
                 }
             }
         });
-
         //7. 发送请求到上面封装的url地址中, 携带请求对象, 返回响应, 如果认证成功, 响应中有jwt和jti等
         //参数1: 请求地址, 参数2:请求类型, 参数3: 请求实体对象, 参数4:返回值类型
         ResponseEntity<Map> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, Map.class);
@@ -96,15 +93,12 @@ public class AuthServiceImpl implements AuthService {
                 || StringUtils.isEmpty(resultMap.get("jti"))) {
             throw new RuntimeException("请求异常, 请检查所有封装的参数, 有错误的地方");
         }
-
         AuthToken authToken = new AuthToken();
         authToken.setAccessToken(resultMap.get("access_token"));
         authToken.setRefreshToken(resultMap.get("refresh_token"));
         authToken.setJti(resultMap.get("jti"));
-
         //9. 将jti作为key, jwt作为value存入redis中保存
         redisTemplate.boundValueOps(authToken.getJti()).set(authToken.getAccessToken(), ttl, TimeUnit.SECONDS);
-
         //10. 返回AuthToken实体对象
         return authToken;
     }
