@@ -18,6 +18,7 @@
         <module>gogo_canal</module>
         <module>gogo_gateway</module>
         <module>gogo_web</module>
+        <module>gogo_task</module>
     </modules>
 
     <parent>
