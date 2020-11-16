@@ -23,6 +23,7 @@
         <module>gogo_service_user</module>
         <module>gogo_service_order</module>
         <module>gogo_service_pay</module>
+        <module>gogo_service_seckill</module>
     </modules>
 
 

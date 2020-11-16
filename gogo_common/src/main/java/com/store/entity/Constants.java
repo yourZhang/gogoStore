@@ -2,6 +2,7 @@ package com.store.entity;
 
 /**
  * 常量
+ *
  * @author ZJ
  */
 public class Constants {
@@ -11,9 +12,9 @@ public class Constants {
     //待支付订单key
     public final static String REDIS_ORDER_PAY = "order_pay_";
     //秒杀商品key
-    public static final String SECKILL_GOODS_KEY="seckill_goods_";
+    public static final String SECKILL_GOODS_KEY = "seckill_goods_";
     //秒杀商品库存数key
-    public static final String SECKILL_GOODS_STOCK_COUNT_KEY="seckill_goods_stock_count_";
+    public static final String SECKILL_GOODS_STOCK_COUNT_KEY = "seckill_goods_stock_count_";
     //秒杀用户key
     public static final String SECKILL_USER_KEY = "seckill_user_";
 
@@ -41,4 +42,9 @@ public class Constants {
     public static final String ORDER_STATUS_8 = "8";
     //订单超时结束
     public static final String ORDER_STATUS_9 = "9";
+
+    /**
+     * 页面令牌前缀
+     */
+    public static final String PAGE_TOKEN = "page_token_";
 }

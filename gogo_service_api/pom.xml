@@ -20,6 +20,7 @@
         <module>gogo_service_search_api</module>
         <module>gogo_service_order_api</module>
         <module>gogo_service_pay_api</module>
+        <module>gogo_service_seckill_api</module>
     </modules>
     <dependencies>
         <dependency>

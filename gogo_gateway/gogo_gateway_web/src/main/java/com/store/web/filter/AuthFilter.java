@@ -38,7 +38,6 @@ public class AuthFilter implements Ordered, GlobalFilter {
             //放行
             return chain.filter(exchange);
         }
-
         //5. 从消费者浏览器cookie中获取jti短令牌
         String jti = authService.findJtiByCookie(request);
         //6. 判断jti短令牌是否为空, 为空重定向到认证微服务从新登录

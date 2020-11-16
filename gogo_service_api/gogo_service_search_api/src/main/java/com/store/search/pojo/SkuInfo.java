@@ -1,4 +1,3 @@
-
 package com.store.search.pojo;
 
 import lombok.AllArgsConstructor;
@@ -12,7 +11,6 @@ import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
-
 
 @Document(indexName = "skuinfo", type = "docs")
 @Data
